@@ -1,0 +1,57 @@
+{
+  "name": "kigs",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
+    "@heroicons/react": "^2.2.0",
+    "@xyflow/react": "^12.5.4",
+    "eventemitter3": "^5.0.1",
+    "kaspa-wasm": "file:wasm",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.0",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.3"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "test": "jest"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^20",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "sass-embedded": "^1.86.3",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.2.5"
+  }
+}
