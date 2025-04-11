@@ -20,8 +20,8 @@ export const ModuleLayout: FC = () => {
       ?.replaceAll("-", " ");
   }, [location]);
 
-  const currentIndex = modules.findIndex((module) =>
-    location.pathname.endsWith(module.path)
+  const currentIndex = modules.findIndex(
+    (module) => `/modules/${module.path}` === location.pathname
   );
 
   const handleNavigate = (direction: "prev" | "next") => {
