@@ -3,14 +3,13 @@ import { FC, useMemo } from "react";
 import {
   Link,
   Outlet,
-  parsePath,
+  useNavigate,
   useLocation,
-  useParams,
-  useRoutes,
-} from "react-router";
+} from "react-router-dom";
 
 export const ModuleLayout: FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const moduleName = useMemo(() => {
     return location.pathname

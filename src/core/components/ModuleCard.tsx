@@ -1,6 +1,6 @@
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import { FC } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 type ModuleCardProps = {
   index: number;
