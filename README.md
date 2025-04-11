@@ -46,6 +46,7 @@ If you have ideas or want to fix existing content (which might be inaccurate), y
 
 ## Credits
 
+- All of the [contibutors](https://github.com/IzioDev/kigs/graphs/contributors)
 - **@Stellar(922121054908989440)** on Discord: For your valuable content reviews
 - **@SudoSi 🇨🇦(303250860828262404)** on Discord: For your awesome logo editing
 - **@KaffinPX(961732366055915530)** on Discord: For your initial implementation of Kaspian on Wallet, Account, and Transaction
