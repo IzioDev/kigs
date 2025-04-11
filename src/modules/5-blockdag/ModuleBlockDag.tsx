@@ -99,12 +99,12 @@ export const ModuleBlockDag: FC = () => {
           <ol>
             <li>
               <strong>Start at the Future:</strong>Look at all current leafs and
-              pick the one with the largest blue block history. This is your
+              pick the one with the highest amount of blue work. This is your
               first selected parent.
             </li>
             <li>
               <strong>Jump to the Past:</strong>Move to this block and examine
-              its parents. Again, choose the one with the biggest blue history.
+              its parents. Again, choose the one with the highest amount of blue work.
             </li>
             <li>
               <strong>Repeat:</strong>Keep doing this, and voilà! You've created
@@ -123,7 +123,7 @@ export const ModuleBlockDag: FC = () => {
 
           <h3>Reorganizations (Reorgs)</h3>
           <p>
-            When the path changes between two Virtual Chain calculations, it's
+            Near the tip of the DAG, when the path changes between two Virtual Chain calculations, it's
             called a reorganization. This is why we wait for confirmations to
             trust a transaction. The more confirmations, the more confident we
             are.
