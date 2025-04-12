@@ -1,11 +1,12 @@
+import { ArrowLongLeftIcon, ArrowLongRightIcon, SunIcon, MoonIcon } from "@heroicons/react/24/solid";
 import { FC, useMemo } from "react";
-import { Link, Outlet, useLocation } from "react-router";
-import { ArrowLongLeftIcon, SunIcon, MoonIcon } from "@heroicons/react/24/solid";
+import { modules } from "./module";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import useDarkMode from "../core/hooks/use-darkmode";
-
 
 export const ModuleLayout: FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useDarkMode();
 
   const moduleName = useMemo(() => {
@@ -39,10 +40,12 @@ export const ModuleLayout: FC = () => {
       <Link className="no-underline" to="/">
         <ArrowLongLeftIcon className="text-white size-12 md:size-16 absolute top-0 md:top-2 left-6 md:left-52 hover:text-secondary hover:cursor-pointer transition-colors" />
       </Link>
+
       {/* Module Title */}
       <h3 className="font-rubik inline absolute top-2 md:top-6 text-xl left-24 md:left-72">
         {moduleName ?? ""}
       </h3>
+
       {/* Dark/Light mode toggle button */}
       <button
         onClick={() => setDarkMode(!darkMode)}
@@ -55,11 +58,11 @@ export const ModuleLayout: FC = () => {
           <MoonIcon className="h-6 w-6" />
         )}
       </button>
-      <div className="pt-12 py-16 md:pt-20 w-100 border-t border-white">
+
+      <div className="pt-12 py-16 md:pt-20 w-full border-t border-white">
         <Outlet />
 
         <div className="mt-16 max-w-2xl mx-auto px-4 flex justify-between items-center">
-
           {/* Previous */}
           {hasPrev ? (
             <div className="flex flex-col items-start">
@@ -72,7 +75,9 @@ export const ModuleLayout: FC = () => {
               </button>
               <span className="text-sm mt-2 text-white/60">{prevTitle}</span>
             </div>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
 
           {/* Next */}
           {hasNext && (

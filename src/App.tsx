@@ -1,10 +1,24 @@
 import { modules } from "./modules/module";
 import { ModuleCard } from "./core/components/ModuleCard";
 import logo from "/logo_resized.png";
+import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
+import useDarkMode from "./core/hooks/use-darkmode";
 
 function App() {
+  const [darkMode, setDarkMode] = useDarkMode();
   return (
     <>
+          <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="absolute top-2 right-6 md:top-4 md:right-12 text-white hover:text-secondary transition-colors focus:outline-none"
+        aria-label="Toggle Dark Mode"
+      >
+        {darkMode ? (
+          <SunIcon className="h-6 w-6" />
+        ) : (
+          <MoonIcon className="h-6 w-6" />
+        )}
+      </button>
       <div className="select-none flex flex-col items-center pb-8">
         <header className="mt-12 2xl:mt-24 flex flex-col items-center">
           <div className="flex item font-rubik">
