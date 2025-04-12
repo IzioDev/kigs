@@ -6,7 +6,7 @@ import { ModuleBlockDagStep4 } from "./module-blockdag-step-4";
 
 export const ModuleBlockDag: FC = () => {
   return (
-    <div className="h-full border-t border-white flex flex-row">
+    <div className="h-full flex flex-row">
       <div className="py-8 md:py-16 flex justify-center items-center mx-auto">
         <div className="max-w-2xl markdown">
           <h2>BlockDAG and Mining</h2>
@@ -104,7 +104,8 @@ export const ModuleBlockDag: FC = () => {
             </li>
             <li>
               <strong>Jump to the Past:</strong>Move to this block and examine
-              its parents. Again, choose the one with the highest amount of blue work.
+              its parents. Again, choose the one with the highest amount of blue
+              work.
             </li>
             <li>
               <strong>Repeat:</strong>Keep doing this, and voilà! You've created
@@ -123,10 +124,10 @@ export const ModuleBlockDag: FC = () => {
 
           <h3>Reorganizations (Reorgs)</h3>
           <p>
-            Near the tip of the DAG, when the path changes between two Virtual Chain calculations, it's
-            called a reorganization. This is why we wait for confirmations to
-            trust a transaction. The more confirmations, the more confident we
-            are.
+            Near the tip of the DAG, when the path changes between two Virtual
+            Chain calculations, it's called a reorganization. This is why we
+            wait for confirmations to trust a transaction. The more
+            confirmations, the more confident we are.
           </p>
 
           <p>

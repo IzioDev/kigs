@@ -8,18 +8,21 @@ function App() {
   const [darkMode, setDarkMode] = useDarkMode();
   return (
     <>
-          <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="absolute top-2 right-6 md:top-4 md:right-12 text-white hover:text-secondary transition-colors focus:outline-none"
-        aria-label="Toggle Dark Mode"
-      >
-        {darkMode ? (
-          <SunIcon className="h-6 w-6" />
-        ) : (
-          <MoonIcon className="h-6 w-6" />
-        )}
-      </button>
-      <div className="select-none flex flex-col items-center pb-8">
+      <div>
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="absolute top-2 right-2 md:top-4 md:right-12 text-white hover:text-secondary transition-colors focus:outline-none"
+          aria-label="Toggle Dark Mode"
+        >
+          {darkMode ? (
+            <SunIcon className="h-6 w-6" />
+          ) : (
+            <MoonIcon className="h-6 w-6" />
+          )}
+        </button>
+      </div>
+
+      <div className="select-none flex flex-col items-center pt-2 pb-8">
         <header className="mt-12 2xl:mt-24 flex flex-col items-center">
           <div className="flex item font-rubik">
             <h1 className="inline">Welc</h1>
@@ -43,12 +46,14 @@ function App() {
           ))}
         </nav>
       </div>
-      <div className="mt-12 mb-8 mx-auto w-full flex flex-col items-center sm:w-5/6 2xl:w-3/6">
+      <div className="mt-4 mb-4 px-2 text-center md:text-start md:mt-12 md:mb-8 md:px-0 mx-auto w-full flex flex-col items-center sm:w-5/6 2xl:w-3/6">
         <p>
           Made by IzioDev for the Kaspa Community - Feel free to contact me on
           Discord for any module requests or for pointing at content errors
         </p>
-        <a href="https://github.com/IzioDev/kigs">Github Repository</a>
+        <a className="md:mt-0 mt-2" href="https://github.com/IzioDev/kigs">
+          Github Repository
+        </a>
       </div>
     </>
   );

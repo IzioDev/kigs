@@ -4,7 +4,7 @@ import { ModuleWalletStep1 } from "./module-wallet-step-1";
 
 export const ModuleWallet: FC = () => {
   return (
-    <div className="h-full border-t border-white flex flex-row">
+    <div className="h-full flex flex-row">
       <div className="py-8 md:py-16 flex justify-center items-center mx-auto">
         <div className="max-w-2xl markdown">
           <h2>Warning</h2>
