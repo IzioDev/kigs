@@ -27,7 +27,7 @@
   }
 
   body {
-    @apply bg-primary font-lato;
+    @apply bg-primary font-lato dark:bg-gray-900 dark:text-gray-100;
   }
 
   h1 {
@@ -47,31 +47,29 @@
   }
 
   a {
-    @apply text-white underline;
+    @apply text-white dark:text-white underline;
   }
 
   p {
-    @apply text-white text-lg md:text-base;
+    @apply text-white dark:text-gray-100 text-lg md:text-base;
   }
 
   button {
-    @apply text-white border border-white py-2 px-4 hover:shadow-md hover:shadow-secondary
+    @apply text-white dark:text-white border border-white dark:border-gray-400 py-2 px-4 hover:shadow-md hover:shadow-secondary;
   }
 
   ul {
     li:not(:first-child) {
-      @apply pt-1
+      @apply pt-1;
     }
-
-    @apply list-disc pl-8 pt-1 text-white
+    @apply list-disc pl-8 pt-1 text-white dark:text-gray-100;
   }
 
   ol {
     li:not(:first-child) {
-      @apply pt-1
+      @apply pt-1;
     }
-
-    @apply list-decimal pl-8 pt-1 text-white
+    @apply list-decimal pl-8 pt-1 text-white dark:text-gray-100;
   }
 
   .markdown {
@@ -89,24 +87,21 @@
     }
 
     h2 {
-
       &:not(:first-child) {
-        @apply mt-4
+        @apply mt-4;
       }
-
-      @apply mb-4 border-b border-white inline-block font-rubik text-4xl
+      @apply mb-4 border-b border-white dark:border-gray-600 inline-block font-rubik text-4xl;
     }
 
     h3 {
       &:not(:first-child) {
-        @apply mt-4
+        @apply mt-4;
       }
-
-      @apply font-rubik text-3xl
+      @apply font-rubik text-3xl;
     }
 
-    &>p {
-      @apply mt-4 text-xl
+    & > p {
+      @apply mt-4 text-xl;
     }
 
     code {
@@ -116,37 +111,33 @@
     ul,
     ol {
       li:not(:first-child) {
-        @apply pt-2
+        @apply pt-2;
       }
-
-      @apply list-disc pl-8 pt-4 text-white text-xl
+      @apply list-disc pl-8 pt-4 text-white dark:text-gray-100 text-xl;
     }
 
     a {
-      @apply hover:text-secondary hover:cursor-pointer transition-colors
+      @apply hover:text-secondary hover:cursor-pointer transition-colors;
     }
 
     .react-flow {
       h2 {
-        @apply mb-4 border-b border-white inline-block font-rubik text-4xl
+        @apply mb-4 border-b border-white dark:border-gray-600 inline-block font-rubik text-4xl;
       }
 
       h3 {
-        @apply font-rubik
+        @apply font-rubik;
       }
 
       p {
-        @apply mt-0 text-xl
+        @apply mt-0 text-xl;
       }
 
       a {
-        @apply hover:text-secondary hover:cursor-pointer transition-colors
+        @apply hover:text-secondary hover:cursor-pointer transition-colors;
       }
-
     }
   }
-
-
 }
 
 @tailwind components;
@@ -160,8 +151,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 @import url("../node_modules/@xyflow/react/dist/style.css");
@@ -213,5 +203,4 @@ code {
   --xy-edge-label-background-color-default: transparent;
   --xy-edge-label-color-default: inherit;
   --xy-resize-background-color-default: #3367d9;
-
 }
