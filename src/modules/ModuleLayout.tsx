@@ -1,16 +1,13 @@
-import { ArrowLongLeftIcon, ArrowLongRightIcon } from "@heroicons/react/24/solid";
+import { ArrowLongLeftIcon, ArrowLongRightIcon, SunIcon, MoonIcon } from "@heroicons/react/24/solid";
 import { FC, useMemo } from "react";
 import { modules } from "./module";
-import {
-  Link,
-  Outlet,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import useDarkMode from "../core/hooks/use-darkmode";
 
 export const ModuleLayout: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useDarkMode();
 
   const moduleName = useMemo(() => {
     return location.pathname
@@ -39,19 +36,33 @@ export const ModuleLayout: FC = () => {
 
   return (
     <div className="w-100 h-screen select-none relative">
+      {/* Back arrow */}
       <Link className="no-underline" to="/">
         <ArrowLongLeftIcon className="text-white size-12 md:size-16 absolute top-0 md:top-2 left-6 md:left-52 hover:text-secondary hover:cursor-pointer transition-colors" />
       </Link>
 
+      {/* Module Title */}
       <h3 className="font-rubik inline absolute top-2 md:top-6 text-xl left-24 md:left-72">
         {moduleName ?? ""}
       </h3>
+
+      {/* Dark/Light mode toggle button */}
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="absolute top-2 right-6 md:top-4 md:right-12 text-white hover:text-secondary transition-colors focus:outline-none"
+        aria-label="Toggle Dark Mode"
+      >
+        {darkMode ? (
+          <SunIcon className="h-6 w-6" />
+        ) : (
+          <MoonIcon className="h-6 w-6" />
+        )}
+      </button>
 
       <div className="pt-12 py-16 md:pt-20 w-full border-t border-white">
         <Outlet />
 
         <div className="mt-16 max-w-2xl mx-auto px-4 flex justify-between items-center">
-
           {/* Previous */}
           {hasPrev ? (
             <div className="flex flex-col items-start">
@@ -64,7 +75,9 @@ export const ModuleLayout: FC = () => {
               </button>
               <span className="text-sm mt-2 text-white/60">{prevTitle}</span>
             </div>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
 
           {/* Next */}
           {hasNext && (
