@@ -12,7 +12,7 @@ export const ModuleNetworkStep2: FC<ModuleNetworkStep1Props> = ({}) => {
 
   const init = useKaspaStore((state) => state.init);
 
-  const rpc = useKaspaStore((state) => state.kaspaClient);
+  const rpc = useKaspaStore((state) => state.kaspaClientInstance);
 
   const onConnectClicked = useCallback(async () => {
     if (isLoading) return;
@@ -28,12 +28,12 @@ export const ModuleNetworkStep2: FC<ModuleNetworkStep1Props> = ({}) => {
 
   const onNodeInfoClicked = useCallback(async () => {
     const [info, dagInfo] = await Promise.all([
-      rpc.getInfo(),
-      rpc.getBlockDagInfo(),
+      rpc.rpc?.getInfo(),
+      rpc.rpc?.getBlockDagInfo(),
     ]);
 
-    setPeerInfo(info);
-    setDagInfo(dagInfo);
+    setPeerInfo(info!);
+    setDagInfo(dagInfo!);
   }, [isLoading]);
 
   if (isLoading) {

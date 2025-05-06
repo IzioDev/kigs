@@ -1,57 +1,26 @@
 import { create } from "zustand";
-import { Encoding, NetworkId, Resolver, RpcClient } from "kaspa-wasm";
-import Wallet from "./wallet";
-import Account from "./account";
-import Node from "./node";
+import { KaspaClient } from "./service/kaspa-client";
 
 interface KaspaState {
-  kaspaClient: RpcClient;
-  walletStorage: Wallet;
-  node: Node;
-  account: Account;
+  kaspaClientInstance: KaspaClient;
+  isConnected: boolean;
   init: () => Promise<void>;
   clear: () => Promise<void>;
-  setWalletStorage: (w: Wallet) => void;
-  setAccount: (a: Account) => void;
 }
 
 export const useKaspaStore = create<KaspaState>((set, g) => {
-  const kaspaClient = new RpcClient({
-    resolver: new Resolver(),
-    networkId: new NetworkId("testnet-10"),
-    encoding: Encoding.Borsh,
-  });
-
-  const node = new Node(kaspaClient);
-  const account = new Account(node);
+  const kaspaClientInstance = new KaspaClient("testnet-10");
 
   return {
-    kaspaClient,
-    walletStorage: new Wallet(() => void 0),
-    account: account,
-    node: node,
+    kaspaClientInstance,
+    isConnected: false,
     async init() {
-      return new Promise(async (res, rej) => {
-        const client = g().kaspaClient;
+      await g().kaspaClientInstance.connect();
 
-        if (!client.isConnected) {
-          await client.connect({ blockAsyncConnect: true });
-        }
-
-        res();
-      });
+      set({ isConnected: true });
     },
     async clear() {
-      await g().kaspaClient.disconnect();
-    },
-    async getWalletStatus() {
-      return g().walletStorage.status;
-    },
-    setWalletStorage(w: Wallet) {
-      set({ walletStorage: w });
-    },
-    setAccount(a: Account) {
-      set({ account: a });
+      await g().kaspaClientInstance.disconnect();
     },
   };
 });

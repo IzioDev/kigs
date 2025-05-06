@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from "react";
-import { useKaspaStore } from "../kaspa-store";
-import { Status } from "../wallet";
+import { useWalletStore } from "../wallet-store";
+import { Mnemonic } from "kaspa-wasm";
 type CreateWalletStepState =
   | {
       type: "import";
@@ -13,23 +13,22 @@ type CreateWalletStepState =
     };
 
 export const AskWalletOpen: FC<{ onOpened?: () => void }> = ({ onOpened }) => {
-  const walletStorage = useKaspaStore((s) => s.walletStorage);
-  const walletStorageStatus = useKaspaStore((s) => s.walletStorage.status);
+  const walletStore = useWalletStore();
 
   const [createWalletStep, setCreateWalletStep] =
     useState<CreateWalletStepState | null>(null);
 
   const onCreateWallet = useCallback(async () => {
-    const phrase = await walletStorage.create("password");
+    const phrase = await walletStore.create(Mnemonic.random(24), "password");
     setCreateWalletStep({
       type: "confirmed",
       message: `Successfully created wallet, here is the mnemonic (seed phrase): ${phrase}`,
     });
-  }, []);
+  }, [walletStore]);
 
   const onOpenWallet = useCallback(async () => {
-    await walletStorage.unlock(0, "password");
-  }, [walletStorage]);
+    await walletStore.unlock("password");
+  }, [walletStore]);
 
   const onImportWallet = useCallback(async () => {
     setCreateWalletStep({ type: "import" });
@@ -41,7 +40,7 @@ export const AskWalletOpen: FC<{ onOpened?: () => void }> = ({ onOpened }) => {
       const value = e.target[0].value;
       e.preventDefault();
       try {
-        await walletStorage.import(value, "password");
+        await walletStore.create(value, "password");
 
         setCreateWalletStep({
           type: "confirmed",
@@ -55,10 +54,10 @@ export const AskWalletOpen: FC<{ onOpened?: () => void }> = ({ onOpened }) => {
         });
       }
     },
-    [walletStorage]
+    [walletStore]
   );
 
-  if (walletStorageStatus === Status.Unlocked) {
+  if (walletStore.unlockedWallet) {
     onOpened ? onOpened() : null;
     return null;
   }
@@ -93,13 +92,13 @@ export const AskWalletOpen: FC<{ onOpened?: () => void }> = ({ onOpened }) => {
 
   return (
     <div className="flex gap-4 items-center justify-center w-2/4 h-full">
-      {walletStorageStatus === Status.Uninitialized ? (
+      {!walletStore.doesExists ? (
         <>
           <button onClick={onCreateWallet}>Create a Wallet</button>
           <p>OR</p>
           <button onClick={onImportWallet}>Import a Wallet</button>
         </>
-      ) : walletStorageStatus === Status.Locked ? (
+      ) : !walletStore.unlockedWallet ? (
         <button onClick={onOpenWallet}>Open the Wallet</button>
       ) : null}
     </div>

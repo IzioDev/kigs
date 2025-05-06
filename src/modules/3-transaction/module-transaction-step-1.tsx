@@ -1,20 +1,22 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { Status } from "../../core/wallet";
 import { useKaspaStore } from "../../core/kaspa-store";
-import { useEventEmitter } from "../../core/hooks/use-event-emitter";
 import { AskWalletOpen } from "../../core/containers/AskWalletOpen";
+import { useWalletStore } from "../../core/wallet-store";
 
 type ModuleTransactionStep1Props = {};
 
 export const ModuleTransactionStep1: FC<ModuleTransactionStep1Props> = ({}) => {
-  const walletStorageStatus = useKaspaStore((s) => s.walletStorage.status);
-  const account = useKaspaStore((s) => s.account);
+  const balance = useWalletStore((s) => s.balance);
+  const address = useWalletStore((s) => s.address);
 
+  const walletStore = useWalletStore();
+
+  const unlockedWallet = useWalletStore((s) => s.unlockedWallet);
+
+  const kaspaClientInstance = useKaspaStore((s) => s.kaspaClientInstance);
   const init = useKaspaStore((s) => s.init);
 
   const [step, setStep] = useState(0);
-
-  const [balance, setBalance] = useState(account.balance);
 
   const [firstUtxo, setFirstUtxo] = useState<
     | undefined
@@ -31,16 +33,18 @@ export const ModuleTransactionStep1: FC<ModuleTransactionStep1Props> = ({}) => {
     setStep(step + 1);
   }, [step]);
 
-  useEventEmitter(account, "balance", (balance) => {
-    setBalance(balance);
-  });
-
   useEffect(() => {
-    init();
-  }, []);
+    if (unlockedWallet) {
+      if (!kaspaClientInstance.connected) {
+        init().then(() => {
+          walletStore.start(kaspaClientInstance, unlockedWallet);
+        });
+      }
+    }
+  }, [unlockedWallet]);
 
   const onLoadFirstUtxo = useCallback(() => {
-    const firstUtxo = account.context.getMatureRange(0, 1).at(0);
+    const firstUtxo = walletStore.getMatureUtxos().at(0);
 
     if (!firstUtxo) {
       setFirstUtxo(null);
@@ -53,9 +57,9 @@ export const ModuleTransactionStep1: FC<ModuleTransactionStep1Props> = ({}) => {
       toAddress: firstUtxo.address?.toString() ?? "unknown",
       transactionId: firstUtxo.outpoint.transactionId,
     });
-  }, [account]);
+  }, [walletStore]);
 
-  if (walletStorageStatus !== Status.Unlocked) {
+  if (!walletStore.unlockedWallet) {
     return <AskWalletOpen />;
   }
 
@@ -65,7 +69,7 @@ export const ModuleTransactionStep1: FC<ModuleTransactionStep1Props> = ({}) => {
         <p className="text-center">
           Kaspa (testnet) Receive Address:{" "}
           <code className="select-text block break-all px-4 2xl:px-0">
-            {account?.addresses?.receiveAddresses?.at(0)}
+            {address?.toString()}
           </code>
         </p>
 

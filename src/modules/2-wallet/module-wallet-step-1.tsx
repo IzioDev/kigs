@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from "react";
-import { Status } from "../../core/wallet";
 import { useKaspaStore } from "../../core/kaspa-store";
-import { useEventEmitter } from "../../core/hooks/use-event-emitter";
+import { useWalletStore } from "../../core/wallet-store";
+import { Mnemonic } from "kaspa-wasm";
 
 type ModuleWalletStep1Props = {};
 
@@ -17,22 +17,20 @@ type CreateWalletStepState =
     };
 
 export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
-  const walletStorage = useKaspaStore((s) => s.walletStorage);
-  const walletStorageStatus = useKaspaStore((s) => s.walletStorage.status);
-  const account = useKaspaStore((s) => s.account);
+  const balance = useWalletStore((s) => s.balance);
+  const address = useWalletStore((s) => s.address);
+
+  const walletStore = useWalletStore();
 
   const init = useKaspaStore((s) => s.init);
-  const rpc = useKaspaStore((s) => s.kaspaClient);
-  const [isRpcConnected, setIsRpcConnected] = useState(rpc.isConnected);
+  const rpc = useKaspaStore((s) => s.kaspaClientInstance);
 
   const [step, setStep] = useState(0);
   const [createWalletStep, setCreateWalletStep] =
     useState<CreateWalletStepState | null>(null);
 
-  const [balance, setBalance] = useState(account.balance);
-
   const onCreateWallet = useCallback(async () => {
-    const phrase = await walletStorage.create("password");
+    const phrase = await walletStore.create(Mnemonic.random(24), "password");
     setCreateWalletStep({
       type: "confirmed",
       message: `Successfully created wallet, here is the mnemonic (seed phrase): ${phrase}`,
@@ -40,8 +38,8 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
   }, []);
 
   const onOpenWallet = useCallback(async () => {
-    await walletStorage.unlock(0, "password");
-  }, [walletStorage]);
+    await walletStore.unlock("password");
+  }, [walletStore]);
 
   const onImportWallet = useCallback(async () => {
     setCreateWalletStep({ type: "import" });
@@ -53,7 +51,7 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
       const value = e.target[0].value;
       e.preventDefault();
       try {
-        await walletStorage.import(value, "password");
+        await walletStore.create(value, "password");
 
         setCreateWalletStep({
           type: "confirmed",
@@ -67,26 +65,26 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
         });
       }
     },
-    [walletStorage]
+    [walletStore]
   );
+
+  const onShowWallet = useCallback(async () => {
+    if (!rpc.connected) {
+      await init();
+    }
+
+    setStep(step + 1);
+
+    await walletStore.start(rpc, walletStore.unlockedWallet!);
+  }, [walletStore, rpc]);
 
   const onNextStepClicked = useCallback(async () => {
     setStep(step + 1);
   }, [step]);
 
   const onResetClicked = useCallback(async () => {
-    await walletStorage.reset();
-  }, [walletStorage]);
-
-  const onConnectClicked = useCallback(async () => {
-    if (!rpc.isConnected) await init();
-
-    setIsRpcConnected(true);
-  }, [init]);
-
-  useEventEmitter(account, "balance", (balance) => {
-    setBalance(balance);
-  });
+    walletStore.flush();
+  }, [walletStore]);
 
   if (step === 0) {
     if (createWalletStep) {
@@ -119,15 +117,15 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
 
     return (
       <div className="flex gap-4 items-center justify-center">
-        {walletStorageStatus === Status.Uninitialized ? (
+        {!walletStore.doesExists ? (
           <>
             <button onClick={onCreateWallet}>Create a Wallet</button>
             <p>OR</p>
             <button onClick={onImportWallet}>Import a Wallet</button>
           </>
-        ) : walletStorageStatus === Status.Unlocked ? (
+        ) : walletStore.unlockedWallet !== null ? (
           <>
-            <button onClick={onNextStepClicked}>Show Wallet</button>
+            <button onClick={onShowWallet}>Show Wallet</button>
             <p>OR</p>
             <button onClick={onResetClicked}>Reset the Wallet</button>
           </>
@@ -144,17 +142,13 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
         <p className="text-center">
           Kaspa (testnet) Receive Address:{" "}
           <code className="select-text block break-all px-4 2xl:px-0">
-            {account?.addresses?.receiveAddresses?.at(0)}
+            {address?.toString()}
           </code>
         </p>
 
-        {isRpcConnected ? (
-          <>
-            <p>Mature Balance: {balance}</p>
-          </>
-        ) : (
-          <button onClick={onConnectClicked}>Connect to check balance</button>
-        )}
+        <>
+          <p>Mature Balance: {balance}</p>
+        </>
       </div>
     );
   }
