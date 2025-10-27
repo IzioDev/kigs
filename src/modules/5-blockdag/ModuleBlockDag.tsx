@@ -146,14 +146,14 @@ export const ModuleBlockDag: FC = () => {
 
           <h3>Mining Rewards</h3>
           <p>
-            Above, we stated that the more a miner reference current leafs, the
+            Above, we stated that the more a miner reference current leaves, the
             higher their chances of getting rewarded. Can you try to guess why?
           </p>
 
           <p>
             A miner that refuse to reference some of the leaf has higher chance
             of being part of a red set, hence, not getting rewarded by the
-            Network. They are incentivize to reference all of the leafs.
+            Network. They are incentivized to reference all of the leaves.
           </p>
         </div>
       </div>

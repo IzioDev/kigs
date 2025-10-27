@@ -62,12 +62,12 @@ export const ModuleTransaction: FC = () => {
             The Kaspa Explorer is yet another community-driven initiative that
             helps discovering the network activity, especially the accepted
             blocks and transactions, it is a very helpful tool to discover, take
-            some times and familiar yourself with it.
+            some time and familiarize yourself with it.
           </p>
 
           <p>
-            From there, you should notice that in order to Kaspa Network to
-            process the transaction, the sender paid a fee (known as gas fee),
+            From there, you should notice that in order for the Kaspa Network to
+            process the transaction, the sender paid a fee (known as a gas fee),
             this will be sent to the miner that included your transaction in the
             block they found, as a small reward.
           </p>
