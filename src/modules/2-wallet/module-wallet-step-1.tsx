@@ -35,7 +35,7 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
       type: "confirmed",
       message: `Successfully created wallet, here is the mnemonic (seed phrase): ${phrase}`,
     });
-  }, []);
+  }, [walletStore.create]);
 
   const onOpenWallet = useCallback(async () => {
     await walletStore.unlock("password");
@@ -65,7 +65,7 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
         });
       }
     },
-    [walletStore]
+    [walletStore],
   );
 
   const onShowWallet = useCallback(async () => {
@@ -73,14 +73,22 @@ export const ModuleWalletStep1: FC<ModuleWalletStep1Props> = ({}) => {
       await init();
     }
 
-    setStep(step + 1);
+    setStep((prev) => prev + 1);
 
     await walletStore.start(rpc, walletStore.unlockedWallet!);
-  }, [walletStore, rpc]);
+  }, [walletStore, rpc, init]);
 
   const onNextStepClicked = useCallback(async () => {
-    setStep(step + 1);
-  }, [step]);
+    if (createWalletStep?.type === "confirmed") {
+      if (!rpc.connected) {
+        await init();
+      }
+
+      await walletStore.start(rpc, walletStore.unlockedWallet!);
+    }
+
+    setStep((prev) => prev + 1);
+  }, [createWalletStep, init, rpc, walletStore]);
 
   const onResetClicked = useCallback(async () => {
     walletStore.flush();

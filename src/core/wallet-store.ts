@@ -18,21 +18,21 @@ type WalletState = {
   isAccountServiceReady: boolean;
 
   // wallet storage
-  create: (mnemonic: Mnemonic, password: string) => Promise<void>;
+  create: (mnemonic: Mnemonic, password: string) => Promise<string>;
   unlock: (password: string) => Promise<void>;
   lock: () => void;
 
   // wallet x accounts
   start: (
     rpcClient: KaspaClient,
-    unlockedWallet: UnlockedWallet
+    unlockedWallet: UnlockedWallet,
   ) => Promise<{ receiveAddress: Address }>;
   stop: () => void;
 
   sendTransaction: (
     address: Address,
     amount: bigint,
-    password: string
+    password: string,
   ) => Promise<string>;
 
   getMatureUtxos: () => UtxoEntryReference[];
@@ -42,15 +42,15 @@ type WalletState = {
 
   // allow other store to subscribe to account service events
   onAccountServiceEvent: <
-    T extends EventEmitter.EventNames<AccountServiceEvents>
+    T extends EventEmitter.EventNames<AccountServiceEvents>,
   >(
     event: T,
-    listener: EventEmitter.EventListener<AccountServiceEvents, T>
+    listener: EventEmitter.EventListener<AccountServiceEvents, T>,
   ) => void;
 };
 
 type TypedAccountServiceMap<
-  T extends EventEmitter.EventNames<AccountServiceEvents>
+  T extends EventEmitter.EventNames<AccountServiceEvents>,
 > = Record<T, EventEmitter.EventListener<AccountServiceEvents, T>[]>;
 
 export const useWalletStore = create<WalletState>((set, g) => {
@@ -77,6 +77,8 @@ export const useWalletStore = create<WalletState>((set, g) => {
       _walletStorage.create(mnemonic, password);
       set({ doesExists: true });
       await g().unlock(password);
+
+      return mnemonic.phrase;
     },
     unlock: async (password: string) => {
       const unlockedWallet = await _walletStorage.getDecrypted(password);
@@ -100,7 +102,7 @@ export const useWalletStore = create<WalletState>((set, g) => {
           callbacks.forEach((callback) => {
             _accountService!.on(event as keyof AccountServiceEvents, callback);
           });
-        }
+        },
       );
 
       await _accountService.start();
@@ -128,7 +130,7 @@ export const useWalletStore = create<WalletState>((set, g) => {
       }
       return _accountService.createTransaction(
         { address: toAddress, amount, payload: "" },
-        password
+        password,
       );
     },
     getMatureUtxos() {
@@ -143,7 +145,7 @@ export const useWalletStore = create<WalletState>((set, g) => {
 
         // unregister listeners
         for (const [event, cbs] of Object.entries(
-          _accountServiceRegisteredCallbacks
+          _accountServiceRegisteredCallbacks,
         )) {
           for (const cb of cbs) {
             _accountService.off(event as keyof AccountServiceEvents, cb);
